@@ -141,10 +141,10 @@
 #
 # i2c-tools 
 #
-# CONFIG_i2c-tools is not set
+CONFIG_i2c-tools=y
 # CONFIG_i2c-tools-dev is not set
 # CONFIG_i2c-tools-dbg is not set
-# CONFIG_i2c-tools-misc is not set
+CONFIG_i2c-tools-misc=y
 
 #
 # init-ifupdown 
@@ -235,7 +235,7 @@ CONFIG_mtd-utils=y
 #
 # procps 
 #
-# CONFIG_procps is not set
+CONFIG_procps=y
 # CONFIG_procps-dbg is not set
 # CONFIG_procps-dev is not set
 
@@ -976,7 +976,7 @@ CONFIG_pciutils=y
 #
 # python 
 #
-# CONFIG_python is not set
+CONFIG_python=y
 # CONFIG_python-dbg is not set
 # CONFIG_python-mailbox is not set
 # CONFIG_python-resource is not set
@@ -4211,8 +4211,8 @@ CONFIG_bridge-utils=y
 #
 # apps 
 #
-# CONFIG_gpio-demo is not set
-# CONFIG_peekpoke is not set
+CONFIG_gpio-demo=y
+CONFIG_peekpoke=y
 CONFIG_xvcServer=y
 
 #

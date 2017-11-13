@@ -8,15 +8,21 @@ IMAGE_LINGUAS = " "
 
 IMAGE_INSTALL = "\
 		kernel-modules \
+		i2c-tools \
+		i2c-tools-misc \
 		mtd-utils \
+		procps \
 		canutils \
 		openssh-sftp-server \
 		pciutils \
+		python \
 		run-postinsts \
 		packagegroup-core-boot \
 		packagegroup-core-ssh-dropbear \
 		tcf-agent \
 		bridge-utils \
+		gpio-demo \
+		peekpoke \
 		xvcServer \
 		"
 EXTRA_USERS_PARAMS = "usermod -P root root;"
