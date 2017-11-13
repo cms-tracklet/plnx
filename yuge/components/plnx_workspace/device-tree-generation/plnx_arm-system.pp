@@ -79,22 +79,22 @@
                 status = "okay";
                 compatible = "pmbus";
                 reg = <32>;
-       }
+       };
        hwmon@33 {
                 status = "okay";
                 compatible = "pmbus";
                 reg = <33>;
-       }
+       };
        hwmon@35 {
                 status = "okay";
                 compatible = "pmbus";
                 reg = <35>;
-       }
+       };
        hwmon@36 {
                 status = "okay";
                 compatible = "pmbus";
                 reg = <36>;
-       }
+       };
 };
 
 &axi_jtag {
