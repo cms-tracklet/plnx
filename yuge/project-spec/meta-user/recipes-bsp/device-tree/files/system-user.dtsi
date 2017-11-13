@@ -1,0 +1,69 @@
+/include/ "system-conf.dtsi"
+/ {
+};
+/{
+  chosen {
+          bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rw rootwait uio_pdrv_genirq.of_id=\"generic-uio\"";
+  };
+};
+&gem0 {
+            phy-handle = <&phy0>;
+            ps7_ethernet_0_mdio: mdio {
+                 phy0: phy@3 {
+//                    compatible = "micrel,ksz9031";
+                    device_type = "ethernet-phy";
+                    reg = <3>;
+                 }; 
+            };
+};
+&flash0 {
+   compatible = "s25fl512s";
+   spi-tx-bus-width = <0x1>;
+   spi-rx-bus-width = <0x4>;
+};
+&i2c0 {
+	status = "okay";
+        // RTC on the enclustra board
+	pcf85063: pcf85063@51 {
+		status = "okay";
+		compatible = "nxp,pcf85063";
+		reg = <0x51>;
+	};
+        // eeprom on YUGE
+        at24@84 {
+                status = "okay";
+                compatible = "atmel,at24c01";
+                reg = <0x54>;
+        };
+};
+&i2c1 {
+       status = "okay";
+       // various i2c power supplies, use generic drivers
+       // these are the ones directly connected to the Zynq
+       // select via AXI registers
+       // will need to update for devices off FPGA
+       hwmon@32 {
+                status = "okay";
+                compatible = "pmbus";
+                reg = <32>;
+       }
+       hwmon@33 {
+                status = "okay";
+                compatible = "pmbus";
+                reg = <33>;
+       }
+       hwmon@35 {
+                status = "okay";
+                compatible = "pmbus";
+                reg = <35>;
+       }
+       hwmon@36 {
+                status = "okay";
+                compatible = "pmbus";
+                reg = <36>;
+       }
+};
+// virtual cable
+&axi_jtag {
+    compatible = "generic-uio";
+};
