@@ -19,3 +19,5 @@ project-spec/meta-plnx-generated/recipes-kernel/linux/linux-xlnx_%.bbappend
 */*/*/*/*/subdir.mk
 */*/*/.cproject
 
+## pw add
+*~

@@ -12,13 +12,18 @@ IMAGE_INSTALL = "\
 		i2c-tools-misc \
 		mtd-utils \
 		procps \
+		bash \
+		util-linux-hwclock \
+		util-linux-fdisk \
 		canutils \
 		openssh-sftp-server \
+		less \
 		pciutils \
 		python \
 		run-postinsts \
 		packagegroup-core-boot \
 		packagegroup-core-ssh-dropbear \
+		sysfsutils \
 		tcf-agent \
 		bridge-utils \
 		gpio-demo \

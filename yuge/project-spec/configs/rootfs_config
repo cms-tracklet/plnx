@@ -276,7 +276,7 @@ CONFIG_procps=y
 #
 # bash 
 #
-# CONFIG_bash is not set
+CONFIG_bash=y
 # CONFIG_bash-dev is not set
 # CONFIG_bash-dbg is not set
 
@@ -340,7 +340,7 @@ CONFIG_procps=y
 # CONFIG_util-linux-getopt is not set
 # CONFIG_util-linux-findfs is not set
 # CONFIG_util-linux-mountpoint is not set
-# CONFIG_util-linux-hwclock is not set
+CONFIG_util-linux-hwclock=y
 # CONFIG_util-linux-mcookie is not set
 # CONFIG_util-linux-dbg is not set
 # CONFIG_util-linux-mkfs.cramfs is not set
@@ -360,7 +360,7 @@ CONFIG_procps=y
 # CONFIG_util-linux-readprofile is not set
 # CONFIG_util-linux-uuidgen is not set
 # CONFIG_util-linux-mount is not set
-# CONFIG_util-linux-fdisk is not set
+CONFIG_util-linux-fdisk=y
 # CONFIG_util-linux-fsck is not set
 
 #
@@ -663,7 +663,7 @@ CONFIG_openssh-sftp-server=y
 #
 # less 
 #
-# CONFIG_less is not set
+CONFIG_less=y
 # CONFIG_less-dev is not set
 # CONFIG_less-dbg is not set
 
@@ -3335,7 +3335,7 @@ CONFIG_packagegroup-core-ssh-dropbear=y
 #
 # sysfsutils 
 #
-# CONFIG_sysfsutils is not set
+CONFIG_sysfsutils=y
 # CONFIG_libsysfs is not set
 # CONFIG_sysfsutils-dev is not set
 # CONFIG_sysfsutils-dbg is not set
