@@ -19,6 +19,7 @@ IMAGE_INSTALL = "\
 		openssh-sftp-server \
 		less \
 		pciutils \
+		vim \
 		python \
 		run-postinsts \
 		packagegroup-core-boot \
