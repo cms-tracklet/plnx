@@ -42,21 +42,29 @@
        // these are the ones directly connected to the Zynq
        // select via AXI registers
        // will need to update for devices off FPGA
-       hwmon@32 {
-                status = "okay";
-                compatible = "pmbus";
-                reg = <32>;
-       };
+       // PMBUS ADDRESS: 0x20, NOT STUFFED
+       // REFDES: U6
+       //hwmon@32 {
+       //         status = "okay";
+       //         compatible = "pmbus";
+       //         reg = <32>;
+       //};
+       // PMBUS ADDRESS: 0x21, 
+       // REFDES: U8
        hwmon@33 {
                 status = "okay";
                 compatible = "pmbus";
                 reg = <33>;
        };
+       // PMBUS ADDRESS: 0x23
+       // REFDES: U1
        hwmon@35 {
                 status = "okay";
                 compatible = "pmbus";
                 reg = <35>;
        };
+       // PMBUS ADDRESS: 0x24
+       // REFDES: U2
        hwmon@36 {
                 status = "okay";
                 compatible = "pmbus";
