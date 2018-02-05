@@ -1,3 +1,11 @@
+LOCAL COMMENTS PW 2/5/2018
+
+should create a version of xvcServer that takes a local bit or bin file and uses it to the axi-to-jtag to load the main FPGA from the command line on the Zynq. The guts of this should come from the xvcServer.c file, i.e., make it look like you are loading a file over jtag.
+
+
+
+
+
 PetaLinux User Application Template
 ===================================
 
