@@ -143,12 +143,6 @@
 			#size-cells = <0x0>;
 			clock-frequency = <0x61a80>;
 
-			hwmon@32 {
-				status = "okay";
-				compatible = "pmbus";
-				reg = <0x20>;
-			};
-
 			hwmon@33 {
 				status = "okay";
 				compatible = "pmbus";
@@ -597,7 +591,7 @@
 			xlnx,all-outputs = <0x0>;
 			xlnx,all-outputs-2 = <0x1>;
 			xlnx,dout-default = <0x0>;
-			xlnx,dout-default-2 = <0x0>;
+			xlnx,dout-default-2 = <0x1>;
 			xlnx,gpio-width = <0x3>;
 			xlnx,gpio2-width = <0x3>;
 			xlnx,interrupt-present = <0x0>;
@@ -616,7 +610,7 @@
 			xlnx,all-outputs = <0x0>;
 			xlnx,all-outputs-2 = <0x1>;
 			xlnx,dout-default = <0x0>;
-			xlnx,dout-default-2 = <0x0>;
+			xlnx,dout-default-2 = <0x1>;
 			xlnx,gpio-width = <0x3>;
 			xlnx,gpio2-width = <0x2>;
 			xlnx,interrupt-present = <0x0>;

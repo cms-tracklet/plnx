@@ -71,25 +71,21 @@
 };
 &i2c1 {
        status = "okay";
-
-
-
-
-       hwmon@32 {
-                status = "okay";
-                compatible = "pmbus";
-                reg = <32>;
-       };
+# 54 "/mnt/scratch/wittich/tracklet/plnx/yuge/build/tmp/work/plnx_arm-xilinx-linux-gnueabi/device-tree-generation/xilinx+gitAUTOINC+43551819a1-r0/system-user.dtsi"
        hwmon@33 {
                 status = "okay";
                 compatible = "pmbus";
                 reg = <33>;
        };
+
+
        hwmon@35 {
                 status = "okay";
                 compatible = "pmbus";
                 reg = <35>;
        };
+
+
        hwmon@36 {
                 status = "okay";
                 compatible = "pmbus";
