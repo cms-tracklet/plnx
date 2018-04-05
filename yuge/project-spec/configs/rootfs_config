@@ -4214,6 +4214,7 @@ CONFIG_bridge-utils=y
 CONFIG_gpio-demo=y
 CONFIG_peekpoke=y
 CONFIG_xvcServer=y
+CONFIG_xvcServer-init=y
 
 #
 # user packages 

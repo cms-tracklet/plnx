@@ -30,5 +30,6 @@ IMAGE_INSTALL = "\
 		gpio-demo \
 		peekpoke \
 		xvcServer \
+		xvcServer-init \
 		"
 EXTRA_USERS_PARAMS = "usermod -P root root;"

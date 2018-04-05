@@ -1,14 +1,15 @@
-#! /bin/sh
+#!/bin/sh
+
 # starts the virtual cable server
 # YUGE 
 # wittich
 # 2/1/2018
+# moved to this location 4/5/2018
 
-#dropbear-inspired
 
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
 DAEMON=/usr/bin/xvcServer
-NAME=xvcServer.sh
+NAME=xvcServer-init
 DESC="Xilinx Virtual Cable server"
 PIDFILE=/var/run/xvcServer.pid
 
@@ -16,17 +17,15 @@ set -e
 
 
 test ! -r /etc/default/xvcServer || . /etc/default/xvcServer
-test "$NO_START" = "0" || exit 0
+
 test -x "$DAEMON" || exit 0
-test ! -h /var/service/xvcServer || exit 0
+
 
 
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
-	gen_keys
-	start-stop-daemon -S -p $PIDFILE \
-	  -x "$DAEMON" 
+	start-stop-daemon -S -o -b -p $PIDFILE -m -x "$DAEMON" 
 	echo "$NAME."
 	;;
   stop)
@@ -36,10 +35,10 @@ case "$1" in
 	;;
   restart|force-reload)
 	echo -n "Restarting $DESC: "
+        # copied from above
 	start-stop-daemon -K -x "$DAEMON" -p $PIDFILE
-	sleep 1
-	start-stop-daemon -S -p $PIDFILE \
-	  -x "$DAEMON" 
+        sleep 1
+	start-stop-daemon -S -o -b -p $PIDFILE -m -x "$DAEMON" 
 	echo "$NAME."
 	;;
   *)
