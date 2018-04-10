@@ -20,24 +20,44 @@ test ! -r /etc/default/xvcServer || . /etc/default/xvcServer
 
 test -x "$DAEMON" || exit 0
 
+# this number is current as of 4/2018; it could probably 
+# be auto-discovered with some work [wittich]
+GPIO_PIN=849
+
+# this pin is active-low
+turn_on_jtag_gpio() {
+   echo $GPIO_PIN > /sys/class/gpio/export
+   echo out > /sys/class/gpio/gpio849/direction
+   echo 0 > /sys/class/gpio/gpio849/value # this might be redundant
+}
+
+turn_off_jtag_gpio() {
+   echo 1 > /sys/class/gpio/gpio849/value
+   echo $GPIO_PIN > /sys/class/gpio/unexport
+}
+
 
 
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
+        turn_on_jtag_gpio
 	start-stop-daemon -S -o -b -p $PIDFILE -m -x "$DAEMON" 
 	echo "$NAME."
 	;;
   stop)
 	echo -n "Stopping $DESC: "
 	start-stop-daemon -K -x "$DAEMON" -p $PIDFILE
+        turn_off_jtag_gpio
 	echo "$NAME."
 	;;
   restart|force-reload)
 	echo -n "Restarting $DESC: "
         # copied from above
 	start-stop-daemon -K -x "$DAEMON" -p $PIDFILE
+        turn_off_jtag_gpio
         sleep 1
+        turn_on_jtag_gpio
 	start-stop-daemon -S -o -b -p $PIDFILE -m -x "$DAEMON" 
 	echo "$NAME."
 	;;
