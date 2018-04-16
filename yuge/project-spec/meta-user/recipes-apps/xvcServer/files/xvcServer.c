@@ -23,6 +23,9 @@
 #include <netinet/in.h> 
 #include <pthread.h>
 
+#include <syslog.h>
+#include <errno.h>
+extern int errno;
 
 #define MAP_SIZE      0x10000
 
@@ -66,6 +69,7 @@ int handle_data(int fd, volatile jtag_t* ptr) {
       memcpy(result, xvcInfo, strlen(xvcInfo));
       if (write(fd, result, strlen(xvcInfo)) != strlen(xvcInfo)) {
 	perror("write");
+	syslog(LOG_ERR,"write: %s\n", strerror(errno));
 	return 1;
       }
       if (verbose) {
@@ -79,6 +83,7 @@ int handle_data(int fd, volatile jtag_t* ptr) {
       memcpy(result, cmd + 5, 4);
       if (write(fd, result, 4) != 4) {
 	perror("write");
+	syslog(LOG_ERR,"write: %s\n", strerror(errno));
 	return 1;
       }
       if (verbose) {
@@ -94,23 +99,27 @@ int handle_data(int fd, volatile jtag_t* ptr) {
       }
     } else {
       fprintf(stderr, "invalid cmd '%s'\n", cmd);
+      syslog(LOG_ERR,"invalid cmd '%s'\n", cmd);
       return 1;
     }
 
     int len;
     if (sread(fd, &len, 4) != 1) {
       fprintf(stderr, "reading length failed\n");
+      syslog(LOG_ERR, "reading length failed\n");
       return 1;
     }
 
     int nr_bytes = (len + 7) / 8;
     if (nr_bytes * 2 > sizeof(buffer)) {
       fprintf(stderr, "buffer size exceeded\n");
+      syslog(LOG_ERR, "buffer size exceeded\n");
       return 1;
     }
 
     if (sread(fd, buffer, nr_bytes * 2) != 1) {
       fprintf(stderr, "reading data failed\n");
+      syslog(LOG_ERR, "reading data failed\n");
       return 1;
     }
     memset(result, 0, nr_bytes);
@@ -186,6 +195,7 @@ int handle_data(int fd, volatile jtag_t* ptr) {
     }
     if (write(fd, result, nr_bytes) != nr_bytes) {
       perror("write");
+      syslog(LOG_ERR,"write: %s\n", strerror(errno));
       return 1;
     }
 
@@ -202,6 +212,7 @@ int main(int argc, char **argv) {
    
   struct sockaddr_in address;
    
+  openlog("xvcServer",LOG_PERROR|LOG_PID|LOG_ODELAY,LOG_DAEMON);
 
   opterr = 0;
 
@@ -218,6 +229,7 @@ int main(int argc, char **argv) {
   fd_uio = open("/dev/uio0", O_RDWR );
   if (fd_uio < 1) {
     fprintf(stderr,"Failed to Open UIO Device\n");
+    syslog(LOG_ERR,"Failed to Open UIO Device\n");
     return -1;
   }
 
@@ -225,6 +237,7 @@ int main(int argc, char **argv) {
                
   if (s < 0) {
     perror("socket");
+    syslog(LOG_ERR,"socket: %s\n", strerror(errno));
     return 1;
   }
 
@@ -233,6 +246,7 @@ int main(int argc, char **argv) {
 						 MAP_SHARED, fd_uio, 0);
   if (ptr == MAP_FAILED) {
     fprintf(stderr, "MMAP Failed\n");   
+    syslog(LOG_ERR, "MMAP Failed\n");   
     return -1;
   }
         
@@ -247,11 +261,13 @@ int main(int argc, char **argv) {
 
   if (bind(s, (struct sockaddr*) &address, sizeof(address)) < 0) {
     perror("bind");
+    syslog(LOG_ERR,"bind: %s\n", strerror(errno));
     return 1;
   }
 
   if (listen(s, 5) < 0) {
     perror("listen");
+    syslog(LOG_ERR,"listen: %s\n", strerror(errno));
     return 1;
   }
 
@@ -269,6 +285,7 @@ int main(int argc, char **argv) {
 
     if (select(maxfd + 1, &read, 0, &except, 0) < 0) {
       perror("select");
+      syslog(LOG_ERR,"select: %s\n", strerror(errno));
       break;
     }
 
@@ -282,9 +299,11 @@ int main(int argc, char **argv) {
 
 	  if (verbose)
 	    printf("connection accepted - fd %d\n", newfd);
+	  syslog(LOG_INFO,"connection accepted - fd %d\n", newfd);
 
 	  if (newfd < 0) {
 	    perror("accept");
+	    syslog(LOG_WARNING,"accept: %s\n", strerror(errno));
 	  } else {
 	    printf("setting TCP_NODELAY to 1\n");
 	    int flag = 1;
@@ -292,6 +311,7 @@ int main(int argc, char **argv) {
 				       (char *)&flag, sizeof(int));
 	    if (optResult < 0) {
 	      perror("TCP_NODELAY error");
+	      syslog(LOG_WARNING,"TCP_NODELAY error: %s\n", strerror(errno));
 	    }
 	    if (newfd > maxfd) {
 	      maxfd = newfd;
@@ -303,6 +323,7 @@ int main(int argc, char **argv) {
 
 	  if (verbose)
 	    printf("connection closed - fd %d\n", fd);
+	  syslog(LOG_INFO, "connection closed - fd %d\n", fd);
 	  close(fd);
 	  FD_CLR(fd, &conn);
 	}
@@ -310,6 +331,7 @@ int main(int argc, char **argv) {
       else if (FD_ISSET(fd, &except)) {
 	if (verbose)
 	  printf("connection aborted - fd %d\n", fd);
+	syslog(LOG_INFO, "connection aborted - fd %d\n", fd);
 	close(fd);
 	FD_CLR(fd, &conn);
 	if (fd == s)
@@ -318,5 +340,6 @@ int main(int argc, char **argv) {
     }
   }
   munmap((void *) ptr, MAP_SIZE);
+  closelog();
   return 0;
 }
