@@ -1,24 +1,31 @@
-#! /bin/bash -ex 
+#! /bin/bash -ex
+
+# Usage: ./create_project.sh <project_name>
+
+# Prerequisites:
+#  1. source petalinux/settings.sh
+#  2. source petalinux/components/yocto/source/aarch64/environment-setup-aarch64-xilinx-linux
 
 # sample script on how to generate a Yuge/petalinux project. this is currently
 # incomplete
 
 #BASEDIR=/mnt/scratch/wittich/tracklet/firmware/TrackletProject/YUGE/BoardTest/Zynq2/MarsZX2_6089_101_revA
-BASEDIR=/home/jwyngaard/work/CMS/plnx/EnclustraBoard/
-HDW=/home/jwyngaard/work/CMS/plnx/EnclustraBoard/Vivado/Vivado_PM3/MarsZX2_PM3.sdk
+#I'm assuming that you're cwd is here
+BASEDIR=`pwd`
+HDW=${BASEDIR}/Vivado/Vivado_PM3/MarsZX2_PM3.sdk
 
 DIR=$1
 [ -d $DIR ] && (echo $DIR already exists; exit 1)
 
 
 petalinux-create -t project --template zynq --name $1
-cd $1 
+cd $1
 petalinux-config --get-hw-description=${HDW}
 
-##Removed because ubuntu doesn't knwo what "konsole" is
-#cat >> project-spec/meta-user/conf/petalinuxbsp.conf <<EOF
-#OE_TERMINAL = "konsole"
-#EOF
+##Removed because ubuntu doesn't know what "konsole" is
+cat >> project-spec/meta-user/conf/petalinuxbsp.conf <<EOF
+OE_TERMINAL = "konsole"
+EOF
 
 
 # EDIT such that the device tree file looks like this
@@ -38,7 +45,7 @@ cat > project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi <<EO
                     compatible = "micrel,ksz9031";
                     device_type = "ethernet-phy";
                     reg = <3>;
-                 }; 
+                 };
             };
 };
 &flash0 {
@@ -74,7 +81,7 @@ cat > project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi <<EO
        //         compatible = "pmbus";
        //         reg = <32>;
        //};
-       // PMBUS ADDRESS: 0x21, 
+       // PMBUS ADDRESS: 0x21,
        // REFDES: U8
        hwmon@33 {
                 status = "okay";
@@ -133,7 +140,7 @@ petalinux-package --boot --fsbl images/linux/zynq_fsbl.elf --fpga images/linux/s
 # success! The PHY appears both to the u-boot and to the kernel
 
 # For a new SD card it must be formatted with two partitions
- 
+
 # 1. the first partition must be FAT and at least 64 MB, and bootable
 # 2. the second partition can be ext4 and take up the rest of the card.
 
