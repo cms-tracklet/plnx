@@ -103,10 +103,6 @@ cat > project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi <<EO
                 reg = <36>;
        };
 };
-// virtual cable
-&axi_jtag {
-    compatible = "generic-uio";
-};
 EOF
 #Note that for the gem0, the actual compatible line is commented out.
 
