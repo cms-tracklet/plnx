@@ -52,3 +52,13 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# EnclusterBoard BSP generation periferal files
+**/Vivado/Vivado_PM3/MarsZX2_PM3.cache/*
+**/Vivado/Vivado_PM3/MarsZX2_PM3.hw/*
+**/Vivado/Vivado_PM3/MarsZX2_PM3.runs/*
+**/Vivado/Vivado_PM3/MarsZX2_PM3.srcs/*
+**/Vivado/Vivado_PM3/MarsZX2_PM3.xpr
+**/Vivado/*.tcl
+*.xdc
+
