@@ -1,0 +1,14 @@
+*/config.old
+build/
+images/linux/
+.petalinux/*
+!.petalinux/metadata
+*.o
+*.jou
+*.log
+.metadata/
+meta-plnx-generated/
+.Xil/
+*/*/config.old
+*/*/rootfs_config.old
+
