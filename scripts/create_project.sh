@@ -1,18 +1,27 @@
-#! /bin/bash -ex 
+#! /bin/bash -ex
 
-# sample script on how to generate a Yuge/petalinux project. this is currently
-# incomplete
+# Prerequisites:
+#  1. petalinux v2017.4 installed in /opt/petalinux
+#  2. source /opt/petalinux/settings.sh
+#  3. source /opt/petalinux/components/yocto/source/aarch64/environment-setup-aarch64-xilinx-linux
+#  4. export PATH=/opt/petalinux/components/yocto/source/aarch64/layers/core/bitbake/bin:$PATH
 
-BASEDIR=/mnt/scratch/wittich/tracklet/firmware/TrackletProject/YUGE/BoardTest/Zynq2/MarsZX2_6089_101_revA
+# Usage: ./create_project.sh <project_name>
 
+
+#BASEDIR=/mnt/scratch/wittich/tracklet/firmware/TrackletProject/YUGE/BoardTest/Zynq2/MarsZX2_6089_101_revA
+#I'm assuming that you're cwd is here
+BASEDIR=`pwd`
+#HDW=${BASEDIR}/../EnclustraBoard/Vivado/Vivado_PM3/MarsZX2_PM3.sdk
+HDW=${BASEDIR}/../yuge/project-spec/hw-description
 
 DIR=$1
 [ -d $DIR ] && (echo $DIR already exists; exit 1)
 
 
 petalinux-create -t project --template zynq --name $1
-cd $1 
-petalinux-config --get-hw-description=${BASEDIR}/MarsZX2_6089_101_revA.sdk
+cd $1
+petalinux-config --get-hw-description=${HDW}
 
 cat >>  project-spec/meta-user/conf/petalinuxbsp.conf <<EOF
 OE_TERMINAL = "konsole"
@@ -35,7 +44,7 @@ cat > project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi <<EO
 //                    compatible = "micrel,ksz9031";
                     device_type = "ethernet-phy";
                     reg = <3>;
-                 }; 
+                 };
             };
 };
 &flash0 {
@@ -71,7 +80,7 @@ cat > project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi <<EO
        //         compatible = "pmbus";
        //         reg = <32>;
        //};
-       // PMBUS ADDRESS: 0x21, 
+       // PMBUS ADDRESS: 0x21,
        // REFDES: U8
        hwmon@33 {
                 status = "okay";
@@ -102,7 +111,8 @@ EOF
 
 petalinux-config -c kernel
 #this is to enable Micrel PHY support (not as a module, built into kernel)
-#Navigate to kernel configuration -> Device Drivers -> Network device support ->PHY Device and Infrastructure -> Micrel PHY
+#In Kernel Configuration, navigate to Device Drivers -> Network device support ->PHY Device support and Infrastructure -> Micrel PHY
+#Enable Micrel PHYs (built into kernel, not as a module)
 #exit the config
 #This generates a file under project-spec and some directories there, not sure if you can just do it w/o the kernel config
 
@@ -118,7 +128,17 @@ ls project-spec/meta-user/recipes-kernel/linux/linux-xlnx/
 # CONFIG_UIO_DMEM_GENIRQ=y -- probably not needed
 
 
+cat >> project-spec/meta-user/recipes-bsp/u-boot/files/platform-top.h <<EOF
+#undef CONFIG_PREBOOT
+#define CONFIG_PREBOOT	"echo U-BOOT for YUGE;setenv preboot; echo;env import -t 0xFFFFFC00;dhcp"
+EOF
 
+petalinux-build
+
+# Copy our patched FSBL code from the Enclustra design reference
+cp ${BASEDIR}/patched_zx2_ref_fsbl/src/* components/plnx_workspace/fsbl/fsbl/src
+
+# Recompile with patched FSBL. I know, there's a better way to do this...
 petalinux-build
 
 petalinux-package --boot --fsbl images/linux/zynq_fsbl.elf --fpga images/linux/system_top_6089_101_revA.bit --u-boot  --kernel --force
@@ -130,7 +150,7 @@ petalinux-package --boot --fsbl images/linux/zynq_fsbl.elf --fpga images/linux/s
 # success! The PHY appears both to the u-boot and to the kernel
 
 # For a new SD card it must be formatted with two partitions
- 
+
 # 1. the first partition must be FAT and at least 64 MB, and bootable
 # 2. the second partition can be ext4 and take up the rest of the card.
 
