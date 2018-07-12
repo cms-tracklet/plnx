@@ -213,6 +213,7 @@ int main(int argc, char **argv) {
   struct sockaddr_in address;
    
   openlog("xvcServer",LOG_PERROR|LOG_PID|LOG_ODELAY,LOG_DAEMON);
+  syslog(LOG_INFO,"starting %s", argv[0]);
 
   opterr = 0;
 
@@ -228,8 +229,8 @@ int main(int argc, char **argv) {
 
   fd_uio = open("/dev/uio0", O_RDWR );
   if (fd_uio < 1) {
-    fprintf(stderr,"Failed to Open UIO Device\n");
-    syslog(LOG_ERR,"Failed to Open UIO Device\n");
+    fprintf(stderr,"Failed to open uio device\n");
+    syslog(LOG_ERR,"Failed to open uio device\n");
     return -1;
   }
 
@@ -245,8 +246,8 @@ int main(int argc, char **argv) {
 						 PROT_READ | PROT_WRITE, 
 						 MAP_SHARED, fd_uio, 0);
   if (ptr == MAP_FAILED) {
-    fprintf(stderr, "MMAP Failed\n");   
-    syslog(LOG_ERR, "MMAP Failed\n");   
+    fprintf(stderr, "MMAP failed\n");   
+    syslog(LOG_ERR, "MMAP failed\n");   
     return -1;
   }
         
@@ -340,6 +341,7 @@ int main(int argc, char **argv) {
     }
   }
   munmap((void *) ptr, MAP_SIZE);
+  syslog(LOG_INFO,"exiting %s", argv[0]);
   closelog();
   return 0;
 }
